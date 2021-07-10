@@ -1,0 +1,32 @@
+{
+  "name": "LSC-CLarity-Midi-Controller",
+  "version": "0.0.1-development",
+  "description": "A project aiming to provide control over the programmer using midi devices over OSC",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haydendonald/LSC-CLarity-Midi-Controller.git"
+  },
+  "keywords": [
+    "LSC",
+    "CLarity",
+    "OSC",
+    "MIDI",
+    "programmer",
+    "control"
+  ],
+  "author": "Hayden Donald",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/haydendonald/LSC-CLarity-Midi-Controller/issues"
+  },
+  "homepage": "https://github.com/haydendonald/LSC-CLarity-Midi-Controller#readme",
+  "dependencies": {
+    "midi": "1.0.0",
+    "nconf": "0.11.2",
+    "osc": "2.4.1"
+  }
+}
