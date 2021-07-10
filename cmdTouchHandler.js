@@ -10,6 +10,25 @@ module.exports = {
     midi: require("./midiHandler.js"),
     config: require("nconf"),
     configLocation: "./cmdTouchConf.json",
+    funcs: {
+        /**
+         * Set the button colour when clicked
+         * setColor=<color>
+         **/
+        "setColour": function(parameter, buttonCallback, faderCallback) {
+            buttonCallback(parameter);
+        },
+        
+        /**
+         * Flash the button a colour than back to another
+         * flash=<onColour>,<offColour>
+         */
+        "flash": function(parameter, buttonCallback, faderCallback) {
+            buttonCallback(parameter.split(",")[1]);
+            buttonCallback(parameter.split(",")[0]);
+            setTimeout(function(){buttonCallback(parameter.split(",")[1]);}, 200);
+        }
+    },
     midiConf: {
         type: {
             button: 144
@@ -20,12 +39,12 @@ module.exports = {
         },
         colours: {
             "off": 0,
-            "redDim": 1,
-            "redBright": 3,
-            "greenDim": 16,
-            "greenBright": 49,
-            "yellowDim": 17,
-            "yellowBright": 127
+            "dimRed": 1,
+            "brightRed": 3,
+            "dimGreen": 16,
+            "brightGreen": 49,
+            "dimYellow": 17,
+            "brightYellow": 127
         }
     },
     gridButtonCallbacks: {},
@@ -100,16 +119,46 @@ module.exports = {
         }
     },
 
-    init: function(success) {
+    assignGridButtonAction: function(row, col, action, params) {
+        var self = this;
+        this.addButtonGridCallback(row, col, function(state) {
+            if(state == "pressed") {
+                self.funcs[action](params, function(color) {
+                    console.log(row + "," + col + "," + color);
+                    self.setGridButtonColor(row, col, color);
+                });
+            }
+        })
+    },
+
+    init: function(funcs, success) {
         console.log("Setup CMD Touch");
         this.midi.init();
         var config = this.config.use("file", {file: this.configLocation});
+
+        //TODO COPY OTHER FUNCS IN HERE
+        //this.funcs = funcs;
         
         //Attempt to load in config
         config.load();
         var error = false;
         if(config.get("inputDevice") === undefined || config.get("inputDevice") == "") {config.set("inputDevice", ""); error = true;}
         if(config.get("outputDevice") === undefined || config.get("outputDevice") == "") {config.set("outputDevice", ""); error = true;}
+        for(var i = 0; i < 8; i++) {
+            for(var j = 0; j < 8; j++) {
+                //Add the default button actions (flash red when clicked)
+                if(config.get("gridButtonAction" + i + "," + j) === undefined || config.get("gridButtonAction" + i + "," + j) == "") {config.set("gridButtonAction" + i + "," + j, "flash=brightGreen,brightRed"); error = true;}
+                else {
+
+                    //TODO allow separation of commands
+
+                    this.assignGridButtonAction(i, j, config.get("gridButtonAction" + i + "," + j).split("=")[0], config.get("gridButtonAction" + i + "," + j).split("=")[1]);
+                }
+
+                //Add the default button colour
+                if(config.get("gridButtonColour" + i + "," + j) === undefined || config.get("gridButtonColour" + i + "," + j) == "") {config.set("gridButtonColour" + i + "," + j, "brightYellow"); error = true;}
+            }
+        }
 
         if(error) {
             console.log("Invalid configuration for the cmdTouch");     
@@ -123,17 +172,22 @@ module.exports = {
         else {  
             var self = this;      
             this.midi.init(config.get("inputDevice"), config.get("outputDevice"));
+
+            //Set off and do the startup animation!
+            this.setAllButtonsColor("off");
+            self.doStartupAnimation();
+
             this.midi.setIncomingHandler(function(deltaTime, message) {
                 self.processGridButton(message[1], message);
                // console.log(`m: ${message} d: ${deltaTime}`);
             });
 
-            //Set off
-            this.setAllButtonsColor("off");
-
-            setInterval(function() {
-                self.doStartupAnimation();
-            }, 1000);
+            //Set the default button colours
+            for(var i = 0; i < 8; i++) {
+                for(var j = 0; j < 8; j++) {
+                    this.setGridButtonColor(i, j, config.get("gridButtonColour" + i + "," + j));
+                }
+            }
             success(true);
         }
     }

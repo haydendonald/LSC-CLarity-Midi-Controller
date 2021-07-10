@@ -1,8 +1,9 @@
 var nconf = require("nconf");
 var cmdTouch = require("./cmdTouchHandler.js");
+var oscHandler = require("./oscHandler.js");
 
 var success = true;
-cmdTouch.init(function(result) {
+cmdTouch.init(oscHandler.funcs, function(result) {
     if(result == false){success = false;}
 });
 
@@ -19,8 +20,8 @@ if(success == false) {
     }
 }
 
-cmdTouch.addButtonGridCallback(0, 1, function(state) {
-    if(state == "pressed") {
-        console.log("LOLLLL");
-    }
-});
+// cmdTouch.addButtonGridCallback(0, 1, function(state) {
+//     if(state == "pressed") {
+//         console.log("LOLLLL");
+//     }
+// });
