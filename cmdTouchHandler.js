@@ -13,21 +13,23 @@ module.exports = {
     funcs: {
         /**
          * Set the button colour when clicked
-         * setColor=<color>
+         * command = setColor
+         * parameter = <color>
          **/
-        "setColour": function(parameter, buttonCallback, faderCallback) {
+        "setColour": function(parameter, buttonCallback) {
             buttonCallback(parameter);
         },
         
         /**
          * Flash the button a colour than back to another
-         * flash=<onColour>,<offColour>
+         * command = flash
+         * parameter = <onColour>,<offColour>
          */
-        "flash": function(parameter, buttonCallback, faderCallback) {
+        "flash": function(parameter, buttonCallback) {
             buttonCallback(parameter.split(",")[1]);
             buttonCallback(parameter.split(",")[0]);
             setTimeout(function(){buttonCallback(parameter.split(",")[1]);}, 200);
-        }
+        },
     },
     midiConf: {
         type: {
@@ -48,6 +50,7 @@ module.exports = {
         }
     },
     gridButtonCallbacks: {},
+    gridButtonConfig: [[]],
     
     /**
      * Add a callback for a grid button press. Callback has parameter "pressed/released"
@@ -119,10 +122,10 @@ module.exports = {
         }
     },
 
-    assignGridButtonAction: function(row, col, action, params) {
+    assignGridButtonAction: function(row, col, action, params, trigger) {
         var self = this;
         this.addButtonGridCallback(row, col, function(state) {
-            if(state == "pressed") {
+            if(state == trigger || trigger == "both") {
                 self.funcs[action](params, function(color) {
                     console.log(row + "," + col + "," + color);
                     self.setGridButtonColor(row, col, color);
@@ -136,8 +139,10 @@ module.exports = {
         this.midi.init();
         var config = this.config.use("file", {file: this.configLocation});
 
-        //TODO COPY OTHER FUNCS IN HERE
-        //this.funcs = funcs;
+        //Copy the base functions to our functions
+        for(var i in funcs) {
+            this.funcs[i] = funcs[i];
+        }
         
         //Attempt to load in config
         config.load();
@@ -147,18 +152,26 @@ module.exports = {
         for(var i = 0; i < 8; i++) {
             for(var j = 0; j < 8; j++) {
                 //Add the default button actions (flash red when clicked)
-                if(config.get("gridButtonAction" + i + "," + j) === undefined || config.get("gridButtonAction" + i + "," + j) == "") {config.set("gridButtonAction" + i + "," + j, "flash=brightGreen,brightRed"); error = true;}
-                else {
-
-                    //TODO allow separation of commands
-
-                    this.assignGridButtonAction(i, j, config.get("gridButtonAction" + i + "," + j).split("=")[0], config.get("gridButtonAction" + i + "," + j).split("=")[1]);
+                if(config.get("gridButton" + i + "," + j) === undefined || config.get("gridButton" + i + "," + j) == "") {
+                    config.set("gridButton" + i + "," + j, {
+                        "actions": [
+                            {
+                                "command": "flash",
+                                "parameter": "brightGreen,brightRed",
+                                "trigger": "pressed"
+                            }
+                        ],
+                        "defaultColour": "brightYellow"
+                    }); 
+                    error = true;
                 }
-
-                //Add the default button colour
-                if(config.get("gridButtonColour" + i + "," + j) === undefined || config.get("gridButtonColour" + i + "," + j) == "") {config.set("gridButtonColour" + i + "," + j, "brightYellow"); error = true;}
+                else {
+                    //Store the button settings
+                    this.gridButtonConfig[i, j] = config.get("gridButton" + i + "," + j);
+                }
             }
         }
+        console.log(this.gridButtonConfig[0, 0]);
 
         if(error) {
             console.log("Invalid configuration for the cmdTouch");     
@@ -177,17 +190,23 @@ module.exports = {
             this.setAllButtonsColor("off");
             self.doStartupAnimation();
 
+            //Set the grid button actions
+            for(var i = 0; i < 1; i++) {
+                for(var j = 0; j < 1; j++) {
+                    var actions = this.gridButtonConfig[i, j].actions;
+                    for(var k = 0; k < actions.length; k++) {
+                        console.log(actions[k]);
+                        this.assignGridButtonAction(i, j, actions[k].command, actions[k].parameter, actions[k].trigger);
+                    }
+                    this.setGridButtonColor(i, j, this.gridButtonConfig[i, j].defaultColour);
+                }
+            }
+
             this.midi.setIncomingHandler(function(deltaTime, message) {
                 self.processGridButton(message[1], message);
                // console.log(`m: ${message} d: ${deltaTime}`);
             });
 
-            //Set the default button colours
-            for(var i = 0; i < 8; i++) {
-                for(var j = 0; j < 8; j++) {
-                    this.setGridButtonColor(i, j, config.get("gridButtonColour" + i + "," + j));
-                }
-            }
             success(true);
         }
     }
