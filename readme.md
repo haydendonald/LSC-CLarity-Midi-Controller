@@ -12,6 +12,8 @@ This project is currently in development so there will be bugs and missing featu
 * Tap (Tap to set bpm then hold to activate / deactivate) ```[Not implemented]```
 * Selection of groups in the programmer ```[Not implemented]```
 
+Note this project does not call BPMs to high precision.
+
 ## Project Dependencies
 Thank you to the following which make this possible!
 * OSC by colindbclark [project](https://www.npmjs.com/package/osc) provides the OSC protocol.
