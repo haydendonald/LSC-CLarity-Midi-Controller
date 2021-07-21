@@ -34,6 +34,17 @@ if(success == false) {
     }
 }
 
+var bpm1 = require("./bpm.js");
+var bpm2 = require("./bpm.js");
+
+
+console.log(bpm1);
+console.log(bpm2);
+
+
+
+
+
 // cmdTouch.addButtonGridCallback(0, 1, function(state) {
 //     if(state == "pressed") {
 //         console.log("LOLLLL");

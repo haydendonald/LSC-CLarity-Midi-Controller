@@ -18,6 +18,15 @@ Thank you to the following which make this possible!
 * MIDI by justinlatimer [project](https://www.npmjs.com/package/midi) provides the MIDI connection.
 * NConf by flatiron [project](https://www.npmjs.com/package/nconf) provides the configuration file handling.
 
+## Installation
+1. Install [NodeJS](https://nodejs.org/en/)
+2. To install the project first clone the project into a working directory using ```git clone https://github.com/haydendonald/LSC-CLarity-Midi-Controller```
+3. Windows users will need the Visual C++ build environment for the midi dependency to work. See [node-gyp on windows](https://github.com/nodejs/node-gyp#on-windows) for more
+4. Install the project dependencies using ```npm install```
+5. Run the project using ```node app.js``` while in the working directory
+6. The project will generate a configuration file and output available midi devices to the console, please update the configuration file(s) with the midi devices and settings you wish to use.
+7. If you want to run the project on system startup have a look at [qckwinsvc](https://www.npmjs.com/package/qckwinsvc) for windows and [pm2](https://pm2.keymetrics.io/) for linux machines.
+
 # Basic Actions
 Below are the actions supported by all surfaces
 
