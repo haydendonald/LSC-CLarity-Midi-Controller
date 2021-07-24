@@ -1,6 +1,7 @@
 var nconf = require("nconf");
 //var cmdTouch = require("./cmdTouchHandler.js");
 var oscHandler = require("./oscHandler.js");
+var bpmEngine = require("./bpm.js");
 
 //The basic actions that can be taken
 var actions = {
@@ -34,28 +35,53 @@ var actions = {
 //     }
 // }
 
-var bpm1 = require("./bpm.js");
-var bpm2 = require("./bpm.js");
 
 
-const readline = require("readline");
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+var global = bpmEngine.create(60, 0, true);
+var bpm1 = bpmEngine.create(30, 0, true);
+var bpm2 = bpmEngine.create(30, 60, true);
 
-// bpm1.start();
+bpm1.setGlobalMetronome(global);
+bpm2.setGlobalMetronome(global);
+
+setTimeout(function(){global.setBPM(120);}, 5000);
+
+// const readline = require("readline");
+// const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+// });
+
+// setTimeout(function() {
+//     global.setBPM(120);
+// }, 3000);
+
+// // bpm1.setBPM(60);
+// // bpm2.setBPM(120);
+
+// // bpm1.start();
+// // bpm2.start();
 
 
-bpm1.start();
+
+// // bpm1.start();
 
 bpm1.setBPMCallback(function() {
-    console.log("TAP = " + bpm1.currentBPM);
+    console.log("BPM1");
     //console.log(bpm1.currentBPM);
 });
-rl.on("line", function(){
-    bpm1.tap();
+bpm2.setBPMCallback(function() {
+    console.log("BPM2");
+    //console.log(bpm1.currentBPM);
 });
+
+
+// rl.on("line", function(){
+//     bpm1.resync();
+//     bpm2.resync();
+// });
+
+// console.log(bpm1);
 
 // setInterval(function() {
 //     bpm1.tap();
