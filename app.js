@@ -44,9 +44,14 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+// bpm1.start();
+
+
 bpm1.start();
+
 bpm1.setBPMCallback(function() {
-    console.log(bpm1.currentBPM);
+    console.log("TAP = " + bpm1.currentBPM);
+    //console.log(bpm1.currentBPM);
 });
 rl.on("line", function(){
     bpm1.tap();
