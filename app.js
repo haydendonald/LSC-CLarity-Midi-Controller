@@ -37,16 +37,16 @@ var actions = {
 
 
 
-var global = bpmEngine.create(60, 0, true);
-var bpm1 = bpmEngine.create(30, 0, true);
-var bpm2 = bpmEngine.create(30, 60, true);
+// var global = bpmEngine.create(60, 0, true);
+// var bpm1 = bpmEngine.create(30, 0, true);
+// var bpm2 = bpmEngine.create(30, 60, true);
 
-bpm1.setGlobalMetronome(global);
-bpm2.setGlobalMetronome(global);
+// bpm1.setGlobalMetronome(global);
+// bpm2.setGlobalMetronome(global);
 
-setTimeout(function(){global.setBPM(120);}, 5000);
+// setTimeout(function(){global.setBPM(120);}, 5000);
 
-// const readline = require("readline");
+// // const readline = require("readline");
 // const rl = readline.createInterface({
 //     input: process.stdin,
 //     output: process.stdout
@@ -66,14 +66,14 @@ setTimeout(function(){global.setBPM(120);}, 5000);
 
 // // bpm1.start();
 
-bpm1.setBPMCallback(function() {
-    console.log("BPM1");
-    //console.log(bpm1.currentBPM);
-});
-bpm2.setBPMCallback(function() {
-    console.log("BPM2");
-    //console.log(bpm1.currentBPM);
-});
+// bpm1.setBPMCallback(function() {
+//     console.log("BPM1");
+//     //console.log(bpm1.currentBPM);
+// });
+// bpm2.setBPMCallback(function() {
+//     console.log("BPM2");
+//     //console.log(bpm1.currentBPM);
+// });
 
 
 // rl.on("line", function(){
