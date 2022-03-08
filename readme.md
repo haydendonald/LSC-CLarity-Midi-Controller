@@ -1,3 +1,7 @@
+# This branch is a redevelopment to ONLY support the APC Mini!
+Due to the project becoming stale this project will only support the APC mini from now.
+
+
 # LSC CLarity Midi Controller
 This project aims to provide control of LSC CLarity over OSC using a [CMD Touch TC64](https://www.behringer.com/product.html?modelCode=P0B3N) and [Behringer BCF2000](https://www.behringer.com/behringer/product?modelCode=P0246).
 

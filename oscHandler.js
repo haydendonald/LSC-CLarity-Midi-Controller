@@ -6,7 +6,6 @@
  */
 
  module.exports = {
-    osc: undefined,
 
     //The supported osc functions with params passed
     funcs: {

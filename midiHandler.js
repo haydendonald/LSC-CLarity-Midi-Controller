@@ -33,6 +33,11 @@ module.exports = {
         } else if(inputName !== undefined) {console.log("Failed to open midi output " + inputName);}
     },
 
+    close: function() {
+        this.input.port.closePort();
+        this.output.port.closePort();
+    },
+
     //Set the callback for incoming data
     setIncomingHandler: function(callback) {
         this.input.port.on("message", function (deltaTime, message) {

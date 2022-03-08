@@ -1,0 +1,40 @@
+{
+  "inputDevice": "APC MINI 0",
+  "outputDevice": "APC MINI 1",
+  "0_action": {
+    "action": "cuelistGoCue",
+    "params": {
+      "cuelist": "test",
+      "cue": "2"
+    },
+    "flashColor": "yellow",
+    "defaultColor": "green"
+  },
+  "7_action": {
+    "action": "cuelistGoCue",
+    "params": {
+      "cuelist": "test",
+      "cue": "2"
+    },
+    "flashColor": "yellow",
+    "defaultColor": "green"
+  },
+  "63_action": {
+    "action": "cuelistGoCue",
+    "params": {
+      "cuelist": "test",
+      "cue": "2"
+    },
+    "flashColor": "yellow",
+    "defaultColor": "green"
+  },
+  "56_action": {
+    "action": "cuelistGoCue",
+    "params": {
+      "cuelist": "test",
+      "cue": "2"
+    },
+    "flashColor": "yellow",
+    "defaultColor": "green"
+  }
+}
